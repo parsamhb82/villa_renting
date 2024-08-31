@@ -13,6 +13,18 @@ class Villa(models.Model):
     address = models.TextField()
     features = models.TextField()
 
+class Comment(models.Model):
+    villa = models.ForeignKey(Villa, on_delete=models.CASCADE, related_name='comments')
+    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='comments')
+    comment = models.TextField()
+    date_created = models.DateTimeField(auto_now_add=True)
+
+class Rate(models.Model):
+    villa = models.ForeignKey(Villa, on_delete=models.CASCADE, related_name='rates')
+    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='rates')
+    rate = models.IntegerField()
+    date_created = models.DateTimeField(auto_now_add=True)
+
 
 
 
