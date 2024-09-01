@@ -8,6 +8,7 @@ class Customer(models.Model):
     money_wallet = models.IntegerField(default=0)
     is_owner = models.BooleanField(default= False)
     
+    
 
 
 

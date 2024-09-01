@@ -1,30 +1,35 @@
 from django.db import models
-from user.models import Customer
-from owner.models import Owner
 
 
 
 class Villa(models.Model):
     name = models.CharField(max_length=255)
-    owner = models.ForeignKey(Owner, on_delete=models.CASCADE, related_name = 'owner')
-    past_renters = models.ManyToManyField(Customer, related_name='renters', blank=True)
-    current_renter = models.ForeignKey(Customer, on_delete= models.PROTECT, related_name='current_renter', blank=True, null=True)
+    owner = models.ForeignKey("owner.Owner", on_delete=models.CASCADE, related_name = 'owner')
     is_currently_rented = models.BooleanField(default=False)
     city = models.CharField(max_length=255)
     address = models.TextField()
     features = models.TextField()
     price  = models.PositiveBigIntegerField()
+    description = models.TextField(blank=True, null=True)
 
 class Comment(models.Model):
-    villa = models.ForeignKey(Villa, on_delete=models.CASCADE, related_name='comments')
-    user = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name='comments')
+    villa = models.ForeignKey("Villa", on_delete=models.CASCADE, related_name='villa')
+    user = models.ForeignKey("user.Customer", on_delete=models.CASCADE, related_name='costumer')
     comment = models.TextField()
     date_created = models.DateTimeField(auto_now_add=True)
 
 class Rate(models.Model):
-    villa = models.ForeignKey(Villa, on_delete=models.CASCADE, related_name='rates')
-    user = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name='rates')
+    villa = models.ForeignKey("Villa", on_delete=models.CASCADE, related_name='Rated_villad')
+    user = models.ForeignKey("user.Customer", on_delete=models.CASCADE, related_name='rater')
     rate = models.IntegerField()
+    date_created = models.DateTimeField(auto_now_add=True)
+
+
+class Rent(models.Model):
+    villa = models.ForeignKey("Villa", on_delete=models.CASCADE, related_name='rented_villa')
+    user = models.ForeignKey("user.Customer", on_delete=models.CASCADE, related_name='renter')
+    date_start = models.DateTimeField()
+    date_end = models.DateTimeField()
     date_created = models.DateTimeField(auto_now_add=True)
 
 

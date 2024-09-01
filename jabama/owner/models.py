@@ -1,7 +1,9 @@
 from django.db import models
 from user.models import Customer
-# Create your models here.
+
 class Owner(models.Model):
-    user = models.OneToOneField(Customer)
+    customer = models.OneToOneField(Customer, on_delete=models.CASCADE, related_name='owner')
+
+    
     
     
