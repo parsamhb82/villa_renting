@@ -1,19 +1,19 @@
-from .models import Customer
+from .models import Owner
 from rest_framework import serializers
 from django.contrib.auth.models import User
 
-class UserProfileSerializer(serializers.ModelSerializer):
+class OwnerSerializer(serializers.ModelSerializer):
     username = serializers.CharField(source='user.username', read_only=True)
     email = serializers.CharField(source='user.email', read_only=True)
     class Meta:
-        model = Customer
+        model = Owner
         fields = ['id', 'username', 'email', 'bio', 'money_wallet']
 
-class UserProfileRegisterSerializer(serializers.ModelSerializer):
+class OwnerRegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
     password_confirmation = serializers.CharField(write_only=True)
     class Meta:
-        model = Customer
+        model = Owner
         fields = ['id', 'username', 'email', 'password', 'password_confirmation']
     
     def validate(self, data):
@@ -25,10 +25,3 @@ class UserProfileRegisterSerializer(serializers.ModelSerializer):
         user = User.objects.create_user(validated_data['username'], validated_data['email'], validated_data['password'])
         return user
 
-class CustomerToOwner(serializers.ModelSerializer):
-    if Customer.is_owner == 'True':
-        class Meta:
-            model = Customer
-            fields ='__all__'
-    
-            

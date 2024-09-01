@@ -13,6 +13,7 @@ class Villa(models.Model):
     city = models.CharField(max_length=255)
     address = models.TextField()
     features = models.TextField()
+    price  = models.PositiveBigIntegerField()
 
 class Comment(models.Model):
     villa = models.ForeignKey(Villa, on_delete=models.CASCADE, related_name='comments')

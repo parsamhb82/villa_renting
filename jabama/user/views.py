@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http.response import JsonResponse
 from rest_framework.generics import ListAPIView, RetrieveAPIView, CreateAPIView, UpdateAPIView, DestroyAPIView
-from user.serializers import UserProfileSerializer, UserProfileRegisterSerializer
+from user.serializers import UserProfileSerializer, UserProfileRegisterSerializer , CustomerToOwner
 from user.models import Customer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
@@ -39,3 +39,8 @@ class UserRegistrationView(CreateAPIView):
         return JsonResponse({'message' : 'user registered successfuly'}, status = 201)
 
 
+class CreateOwner(CreateAPIView):
+    queryset = Customer.objects.all()
+    serializer_class = CustomerToOwner
+    
+    
