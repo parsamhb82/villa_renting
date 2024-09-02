@@ -60,6 +60,9 @@ class CreateOwnerView(APIView):
             return JsonResponse({'message' : 'owner created successfuly'}, status = 201)
         
         return JsonResponse({'error' : 'bad request'}, status = 400)
+
+
+
             
 
     

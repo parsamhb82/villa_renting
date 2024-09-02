@@ -103,6 +103,17 @@ class UpdateRentalStatus(APIView):
 
         return Response({"status" : "villas status has been updated"})
 
+class OwnedVillasList(ListAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = VillaSerializer
+    def get_queryset(self):
+        user = self.request.user
+        customer = user.customer
+        if not customer.is_owner:
+            raise PermissionError("You must be an owner to view this page.")
+        owner = customer.owner
+        return Villa.objects.filter(owner = owner)
+
             
             
 
