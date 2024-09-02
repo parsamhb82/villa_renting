@@ -5,7 +5,7 @@ from villa.models import Rate, Comment, Rent, Villa
 class VillaAdmin(ModelAdmin):
     list_display = [
         'name',
-        'owner'
+        'owner',
         'is_currently_rented',
         'city',
     ]
