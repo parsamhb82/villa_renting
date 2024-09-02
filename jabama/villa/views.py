@@ -27,6 +27,20 @@ class VillaCreateView(CreateAPIView):
     queryset = Villa.objects.all()
     serializer_class = VillaSerializer
     permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        user = self.request.user
+
+        try:
+            customer = user.customer
+        except Customer.DoesNotExist:
+            raise PermissionError("You must be a customer to create a villa.")
+        
+        if not customer.is_owner :
+            raise PermissionError("You must be an owner to create a villa.")
+        
+        owner =customer.owner
+        serializer.save(owner=owner)
     
 class CreatRentVilla(CreateAPIView):
     queryset = Rent.objects.all()
