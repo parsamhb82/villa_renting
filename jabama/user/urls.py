@@ -1,6 +1,10 @@
 
 from django.urls import path
-from . import views
+from .views import (Login,
+                    Refresh,
+                    UserProfileList,
+                    UserProfileView,
+                    )
 
 urlpatterns = [
         path("create_owner/", views.CreateOwnerView.as_view())
