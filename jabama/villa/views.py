@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from .serializers import VillaSerializer,RentSerializer,RateSerializer, CommentSerializer
 from .models import Villa , Comment , Rate, Rent
-from rest_framework.generics import (ListAPIView,RetrieveAPIView,CreateAPIView,DestroyAPIView,UpdateAPIView,ListCreateAPIView,RetrieveUpdateDestroyAPIView,)
+from rest_framework.generics import ( ListAPIView,RetrieveAPIView,CreateAPIView,DestroyAPIView,UpdateAPIView,ListCreateAPIView,RetrieveUpdateDestroyAPIView,)
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from user.models import Customer
@@ -11,7 +11,9 @@ from django.utils.timezone import now
 from datetime import timedelta
 from django.http.response import JsonResponse
 from rest_framework.exceptions import ValidationError
-
+from django.db.models import Avg
+from rest_framework.views import APIView
+from rest_framework.response import Response
 
 
 class VillaView(ListAPIView):
@@ -50,6 +52,43 @@ class CreatRentVilla(CreateAPIView):
             villa.save()
 
             serializer.save(user = customer, villa = villa, date_start = date_start, date_end = date_end, date_created = now())
+
+class RateCreatView(CreateAPIView):
+    queryset = Rate.objects.all()
+    serializer_class = RateSerializer
+    permission_classes = [IsAuthenticated]
+
+class CommentCreatView(CreateAPIView):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+    permission_classes = [IsAuthenticated]
+
+class VillaCommentListView(ListAPIView):
+    serializer_class = CommentSerializer
+
+    def get_queryset(self):
+        villa_id = self.kwargs['villa_id']
+        return Comment.objects.filter(villa_id = villa_id)
+
+class VillaRateView(APIView):
+
+    def get(self, request, villa_id):
+        average_rate = Rate.objects.filter(villa_id=villa_id).aggregate(average=Avg('rate'))['average']
+
+        return Response({'villa_id': villa_id, 'average_rate': average_rate})
+
+class UpdateRentalStatus(APIView):
+    def post(self, request):
+        current_time = now()
+
+        expired_rentals = Rent.objects.filter(date_end__lt = current_time)
+        for rental in expired_rentals:
+            villa = rental.villa
+            villa.is_currently_rented = False
+            villa.save()
+
+        return Response({"status" : "villas status has been updated"})
+
             
             
 
