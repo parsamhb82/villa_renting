@@ -1,3 +1,8 @@
-from django.contrib import admin
+from django.contrib.admin import register, ModelAdmin
+from .models import Customer
 
-# Register your models here.
+@register(Customer)
+class CustomerAdmin(ModelAdmin):
+    list_display = ['user',
+                    'is_owner'
+    ]

@@ -12,17 +12,26 @@ class Villa(models.Model):
     price  = models.PositiveBigIntegerField()
     description = models.TextField(blank=True, null=True)
 
+    def __str__(self):
+        return self.name
+
 class Comment(models.Model):
     villa = models.ForeignKey("Villa", on_delete=models.CASCADE, related_name='villa')
     user = models.ForeignKey("user.Customer", on_delete=models.CASCADE, related_name='costumer')
     comment = models.TextField()
     date_created = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return self.comment
 
 class Rate(models.Model):
     villa = models.ForeignKey("Villa", on_delete=models.CASCADE, related_name='Rated_villad')
     user = models.ForeignKey("user.Customer", on_delete=models.CASCADE, related_name='rater')
     rate = models.IntegerField()
     date_created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.rate
 
 
 class Rent(models.Model):
@@ -31,6 +40,9 @@ class Rent(models.Model):
     date_start = models.DateTimeField()
     date_end = models.DateTimeField()
     date_created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self) -> str:
+        return f"{self.villa}, {self.user}"
 
 
 

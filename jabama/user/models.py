@@ -7,6 +7,10 @@ class Customer(models.Model):
     bio = models.TextField(blank=True, null=True)
     money_wallet = models.IntegerField(default=0)
     is_owner = models.BooleanField(default= False)
+
+    def __str__(self) -> str:
+        return self.user.get_full_name()
+    
     
     
 
