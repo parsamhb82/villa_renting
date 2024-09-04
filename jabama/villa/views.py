@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .serializers import VillaSerializer,RentSerializer,RateSerializer, CommentSerializer
+from .serializers import VillaSerializer,RentSerializer,RateSerializer, CommentSerializer, VillaCreateSerializer
 from .models import Villa , Comment , Rate, Rent
 from rest_framework.generics import ( ListAPIView,RetrieveAPIView,CreateAPIView,DestroyAPIView,UpdateAPIView,ListCreateAPIView,RetrieveUpdateDestroyAPIView,)
 from rest_framework.permissions import IsAuthenticated
@@ -25,7 +25,7 @@ class VillaDetails(RetrieveAPIView):
 
 class VillaCreateView(CreateAPIView):
     queryset = Villa.objects.all()
-    serializer_class = VillaSerializer
+    serializer_class = VillaCreateSerializer
     permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
