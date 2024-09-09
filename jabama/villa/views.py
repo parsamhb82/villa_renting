@@ -92,20 +92,14 @@ class VillaRateView(APIView):
         average_rate = Rate.objects.filter(villa_id=villa_id).aggregate(average=Avg('rate'))['average']
 
         return Response({'villa_id': villa_id, 'average_rate': average_rate})
-
+from .tasks import update_rental_status
 class UpdateRentalStatus(APIView):
     permission_classes = [IsSuperUser]
 
     def post(self, request):
         current_time = now()
 
-        expired_rentals = Rent.objects.filter(date_end__lt = current_time)
-        for rental in expired_rentals:
-            villa = rental.villa
-            villa.is_currently_rented = False
-            villa.save()
-
-        return Response({"status" : "villas status has been updated"})
+        update_rental_status.delay(current_time)
 
 class OwnedVillasList(ListAPIView):
     permission_classes = [IsAuthenticated, IsOwner]
