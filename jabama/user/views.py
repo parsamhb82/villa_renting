@@ -7,6 +7,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from .permissions import IsOwner, IsSuperUser
 class Login(TokenObtainPairView):
     pass
 
@@ -14,6 +15,7 @@ class Refresh(TokenRefreshView):
     pass
 
 class UserProfileList(ListAPIView):
+    permission_classes = [IsSuperUser]
     queryset = Customer.objects.all()
     serializer_class = UserProfileSerializer
 
@@ -21,6 +23,9 @@ class UserProfileView(RetrieveAPIView):
     queryset = Customer.objects.all()
     serializer_class = UserProfileSerializer
     permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Customer.objects.filter(user=self.request.user)
 
 class UserRegistrationView(CreateAPIView):
     serializer_class = UserProfileRegisterSerializer

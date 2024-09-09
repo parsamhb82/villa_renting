@@ -14,9 +14,11 @@ from rest_framework.exceptions import ValidationError
 from django.db.models import Avg
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from user.permissions import IsOwner, IsSuperUser
 
 
 class VillaView(ListAPIView):
+    permission_classes = [IsSuperUser]
     queryset = Villa.objects.all()
     serializer_class = VillaSerializer
 class VillaDetails(RetrieveAPIView):
@@ -26,7 +28,7 @@ class VillaDetails(RetrieveAPIView):
 class VillaCreateView(CreateAPIView):
     queryset = Villa.objects.all()
     serializer_class = VillaCreateSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsOwner]
 
     def perform_create(self, serializer):
         user = self.request.user
@@ -92,6 +94,8 @@ class VillaRateView(APIView):
         return Response({'villa_id': villa_id, 'average_rate': average_rate})
 
 class UpdateRentalStatus(APIView):
+    permission_classes = [IsSuperUser]
+
     def post(self, request):
         current_time = now()
 
@@ -104,7 +108,7 @@ class UpdateRentalStatus(APIView):
         return Response({"status" : "villas status has been updated"})
 
 class OwnedVillasList(ListAPIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsOwner]
     serializer_class = VillaSerializer
     def get_queryset(self):
         user = self.request.user
