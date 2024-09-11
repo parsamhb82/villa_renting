@@ -28,6 +28,7 @@ class VillaView(ListAPIView):
     search_fields = ["name"]
     filterset_fields = ['is_currently_rented']
 class VillaDetails(RetrieveAPIView):
+    permission_classes = [IsSuperUser]
     queryset = Villa.objects.all()
     serializer_class = VillaSerializer
 
