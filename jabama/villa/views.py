@@ -15,12 +15,18 @@ from django.db.models import Avg
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from user.permissions import IsOwner, IsSuperUser
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters
 
 
 class VillaView(ListAPIView):
     permission_classes = [IsSuperUser]
     queryset = Villa.objects.all()
     serializer_class = VillaSerializer
+    filter_backends = [DjangoFilterBackend, filters.OrderingFilter, filters.SearchFilter]
+    ordering_fields = ["price"]
+    search_fields = ["name"]
+    filterset_fields = ['is_currently_rented']
 class VillaDetails(RetrieveAPIView):
     queryset = Villa.objects.all()
     serializer_class = VillaSerializer
@@ -104,6 +110,10 @@ class UpdateRentalStatus(APIView):
 class OwnedVillasList(ListAPIView):
     permission_classes = [IsAuthenticated, IsOwner]
     serializer_class = VillaSerializer
+    filter_backends = [DjangoFilterBackend, filters.OrderingFilter, filters.SearchFilter]
+    ordering_fields = ["price"]
+    search_fields = ["name"]
+    filterset_fields = ['is_currently_rented']
     def get_queryset(self):
         user = self.request.user
         customer = user.customer
