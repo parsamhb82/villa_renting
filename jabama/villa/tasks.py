@@ -18,3 +18,6 @@ def update_rental_status(self, current_time):
         return self.retry(exc=e,max_retries=10)
 
     
+@shared_task
+def send_notification(email, message):
+    pass 
