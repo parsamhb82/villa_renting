@@ -17,6 +17,18 @@ from rest_framework.response import Response
 from user.permissions import IsOwner, IsSuperUser
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
+from .tasks import send_notification
+import requests
+from django.core.mail import send_mail
+from django.conf import settings
+
+def send_email(user_email):
+    subject = 'Villa-jabama'
+    message = 'your chosen villa is reserved'
+    from_email = settings.DEFAULT_FROM_EMAIL
+    recipient_list = [user_email]
+
+    send_mail(subject, message, from_email, recipient_list)
 
 
 class VillaView(ListAPIView):
@@ -76,6 +88,10 @@ class CreatRentVilla(CreateAPIView):
 
             serializer.save(user = customer, villa = villa, date_start = date_start, date_end = date_end, date_created = now())
 
+            user_email = requests.POST.get('email')
+            send_email(user_email)
+
+
 class RateCreatView(CreateAPIView):
     queryset = Rate.objects.all()
     serializer_class = RateSerializer
@@ -123,6 +139,6 @@ class OwnedVillasList(ListAPIView):
         owner = customer.owner
         return Villa.objects.filter(owner = owner)
 
-            
+             
             
 
