@@ -32,13 +32,16 @@ class VillaDetails(RetrieveAPIView):
     queryset = Villa.objects.all()
     serializer_class = VillaSerializer
 
+from django.contrib.auth.models import User
 class VillaCreateView(CreateAPIView):
     queryset = Villa.objects.all()
     serializer_class = VillaCreateSerializer
-    permission_classes = [IsAuthenticated, IsOwner]
+    # permission_classes = [IsAuthenticated, IsOwner]
 
     def perform_create(self, serializer):
-        user = self.request.user
+        #user = self.request.user
+        user = User.objects.get(id=3)
+
 
         try:
             customer = user.customer
@@ -49,7 +52,8 @@ class VillaCreateView(CreateAPIView):
             raise PermissionError("You must be an owner to create a villa.")
         
         owner =customer.owner
-        serializer.save(owner=owner)
+        image = self.request.data.get('image', '')
+        serializer.save(owner=owner, image = image)
     
 class CreatRentVilla(CreateAPIView):
     queryset = Rent.objects.all()

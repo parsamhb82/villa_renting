@@ -147,3 +147,6 @@ CELERY_BROKER_URL = 'amqp://localhost'
 CELERY_ROUTES = {
     'villa.tasks.update_rental_status': {'queue': 'celery'},
 }
+
+MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_URL = '/media/'

@@ -8,6 +8,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .permissions import IsOwner, IsSuperUser
+from rest_framework import status
 class Login(TokenObtainPairView):
     pass
 
@@ -42,7 +43,7 @@ class UserRegistrationView(CreateAPIView):
 
         Customer.objects.create(user=user, **profile_data)
 
-        return JsonResponse({'message' : 'user registered successfuly'}, status = 201)
+        return Response({'message' : 'user registered successfuly'}, status = status.HTTP_201_CREATED)
 
 
 
@@ -55,16 +56,16 @@ class CreateOwnerView(APIView):
             customer = serializer.validated_data['customer']
 
             if customer.is_owner:
-                return JsonResponse({'error' : 'customer is already an owner'}, status = 400)
+                return Response({'error' : 'customer is already an owner'}, status = status.HTTP_400_BAD_REQUEST)
             
             owner = serializer.save()
 
             owner.customer.is_owner = True
             customer.save()
 
-            return JsonResponse({'message' : 'owner created successfuly'}, status = 201)
+            return JsonResponse({'message' : 'owner created successfuly'}, status = status.HTTP_201_CREATED)
         
-        return JsonResponse({'error' : 'bad request'}, status = 400)
+        return JsonResponse({'error' : 'bad request'}, status = status.HTTP_400_BAD_REQUEST)
 
 
 

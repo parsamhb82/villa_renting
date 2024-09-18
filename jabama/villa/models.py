@@ -11,6 +11,7 @@ class Villa(models.Model):
     features = models.TextField()
     price  = models.PositiveBigIntegerField()
     description = models.TextField(blank=True, null=True)
+    image = models.ImageField(upload_to='villa_images/', blank=True, null=True)
 
     def __str__(self):
         return self.name

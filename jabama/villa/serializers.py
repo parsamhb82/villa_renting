@@ -10,7 +10,7 @@ class VillaSerializer(serializers.ModelSerializer):
 class VillaCreateSerializer(serializers.ModelSerializer):
         class Meta:
             model = Villa
-            fields = ['id', 'name', 'description', 'city', 'address', 'price', 'features', 'is_currently_rented']
+            fields = ['id', 'name', 'description', 'city', 'address', 'price', 'features', 'is_currently_rented', 'image']
 
 class CommentSerializer(serializers.ModelSerializer):
         class Meta:
