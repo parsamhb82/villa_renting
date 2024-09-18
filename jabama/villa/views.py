@@ -17,7 +17,8 @@ from rest_framework.response import Response
 from user.permissions import IsOwner, IsSuperUser
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
-
+from .tasks import send_notification
+import requests
 
 class VillaView(ListAPIView):
     permission_classes = [IsSuperUser]
@@ -127,6 +128,9 @@ class OwnedVillasList(ListAPIView):
         owner = customer.owner
         return Villa.objects.filter(owner = owner)
 
-            
+def notif(self , request):
+    user = self.request.user
+    send_notification.delay(user.email , "your chosen villa is reserved")
+             
             
 
